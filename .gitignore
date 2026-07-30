@@ -1,0 +1,22 @@
+# ============================================================
+#  Arquivos com dados reais / sensiveis - NAO versionar
+# ============================================================
+
+# Configuracao local com os IPs reais da rede
+config.local.bat
+
+# Backup do script original (contem IPs reais)
+Alerta.bat.orig
+*.bak
+
+# ============================================================
+#  Arquivos de estado gerados em tempo de execucao
+# ============================================================
+ping_retry.txt
+
+# ============================================================
+#  Sistema / editor
+# ============================================================
+Thumbs.db
+desktop.ini
+.vscode/
