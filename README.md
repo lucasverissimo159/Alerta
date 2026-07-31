@@ -91,9 +91,3 @@ O script roda em laço contínuo. Feche a janela do console para encerrar.
 ## Requisitos
 
 - Windows (usa `ping`, `find`, `timeout` e o Windows Media Player `wmplayer`).
-
-## Aviso
-
-Este repositório é público e contém apenas **valores de exemplo**. Os IPs e
-nomes de unidades reais devem permanecer somente em `config.local.bat` na
-máquina de operação.
