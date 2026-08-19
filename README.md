@@ -1,111 +1,111 @@
-# Alerta — Monitor de IPs com Alerta Sonoro
+# Alert — IP Monitor with Audible Alert
 
-Script em *batch* (Windows) para monitoramento contínuo de disponibilidade
-de hosts de rede via `ping`. Quando um host fica offline, o script emite um
-**alerta sonoro** (um áudio genérico seguido do áudio específico da unidade)
-e passa a re-alertar em **intervalos progressivos** enquanto o host continuar
-inacessível.
+Batch script (Windows) for continuous monitoring of the availability
+of network hosts via `ping`. When a host goes offline, the script emits an
+**audible alert** (a generic sound followed by the unit-specific sound)
+and begins to re-alert at **progressive intervals** as long as the host remains
+unreachable.
 
-> Ferramenta simples pensada para uma central/portaria acompanhar, de forma
-> audível, a queda de links de várias unidades (lojas, depósito, etc.).
+> Simple tool designed for a central office or reception desk to monitor, in an
+> audible manner, the loss of connections from various units (stores, warehouse, etc.).
 
-> ⚠️ **Repositório disponibilizado apenas para portfólio.** O código pode
-> ser visualizado, mas **não** pode ser copiado, baixado, usado ou
-> reaproveitado em outros projetos. Veja a seção [Licença](#licença) e o
-> arquivo [`LICENSE`](./LICENSE).
+> ⚠️ **Repository available for portfolio purposes only.** The code can
+> be viewed, but **cannot** be copied, downloaded, used, or
+> reused in other projects. See the [License](#license) section and the
+> [`LICENSE`](./LICENSE) file.
 
-## Como funciona
+## How it works
 
-A cada ciclo o script:
+In each cycle, the script:
 
-1. Faz `ping` em uma lista de **IPs fixos** e em um **intervalo sequencial** de IPs.
-2. Para cada host **offline**, toca `Alerta.mp3` e depois o áudio da unidade
-   (ex.: `Loja_09.mp3`, `Deposito.mp3`), identificando qual unidade caiu.
-3. Registra a falha em um arquivo de estado (`ping_retry.txt`) e passa a
-   respeitar um intervalo antes de alertar de novo, que **aumenta a cada falha**:
+1. `Pings` a list of **fixed IPs** and a **sequential range** of IPs.
+2. For each **offline** host, it plays `Alerta.mp3` and then the audio file for that unit
+   (e.g., `Loja_09.mp3`, `Deposito.mp3`), identifying which unit went down.
+3. It logs the failure in a status file (`ping_retry.txt`) and then
+   wait a certain interval before alerting again, which **increases with each failure**:
 
-   | Falha consecutiva | Próximo alerta em |
+   | Consecutive failures | Next alert in |
    |-------------------|-------------------|
-   | 1ª                | 5 minutos         |
-   | 2ª                | 15 minutos        |
-   | 3ª                | 30 minutos        |
-   | 4ª ou mais        | 1 hora            |
+   | 1st                | 5 minutes         |
+   | 2nd                | 15 minutes        |
+   | 3rd                | 30 minutes        |
+   | 4th or more     | 1 hour            |
 
-4. Quando o host volta a responder, ele é removido do estado e volta ao
-   monitoramento normal.
+4. When the host starts responding again, it is removed from the status list and returns to
+   normal monitoring.
 
-## Configuração
+## Configuration
 
-Os valores de rede **não** ficam no script — ficam em um arquivo de
-configuração externo, para que o repositório não exponha a topologia real.
+Network values are **not** included in the script—they are stored in an
+external configuration file, so that the repository does not expose the actual topology.
 
-1. Copie o template de exemplo:
+1. Copy the example template:
 
    ```bat
    copy config.example.bat config.local.bat
    ```
 
-2. Edite `config.local.bat` com os **IPs reais** da sua rede.
-   O arquivo `config.local.bat` está no `.gitignore` e **não** vai para o
-   repositório.
+2. Edit `config.local.bat` with the **actual IP addresses** of your network.
+   The `config.local.bat` file is listed in `.gitignore` and **will not** be added to the
+   repository.
 
-Se `config.local.bat` não existir, o script usa `config.example.bat`, que
-contém apenas **endereços fictícios** das faixas reservadas para documentação
-pela [RFC 5737](https://datatracker.ietf.org/doc/html/rfc5737)
+If `config.local.bat` does not exist, the script uses `config.example.bat`, which
+contains only **fictitious addresses** from the ranges reserved for documentation
+by [RFC 5737](https://datatracker.ietf.org/doc/html/rfc5737)
 (`192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24`).
 
-### Parâmetros de configuração
+### Configuration Parameters
 
-| Variável             | Descrição                                                        |
+| Variable             | Description                                                        |
 |----------------------|------------------------------------------------------------------|
-| `ALERT_DIR`          | Pasta com os `.mp3` e o arquivo de estado (padrão `C:\Alerta`).  |
-| `FIXED_IPS`          | Lista de IPs fixos monitorados (separados por espaço).           |
-| `EXCLUDED_IPS`       | IPs a ignorar dentro do intervalo sequencial.                    |
-| `RANGE_PREFIX`       | Prefixo do intervalo (ex.: `192.168` ou `203.0.113`).            |
-| `RANGE_SUFFIX`       | Sufixo do IP montado (ex.: `.254`, ou vazio).                    |
-| `RANGE_FIRST` / `RANGE_LAST` | Faixa numérica varrida no intervalo.                     |
-| `RANGE_NAME_OFFSET`  | Deslocamento para nomear a loja (`Loja_<i - offset>`).           |
-| `SPECIAL_IP[n]` / `SPECIAL_NAME[n]` | Mapa de IP → nome de unidade específica.          |
+| `ALERT_DIR`          | Folder containing the `.mp3` files and the status file (default `C:\Alerta`).  |
+| `FIXED_IPS`          | List of monitored fixed IPs (separated by spaces).           |
+| `EXCLUDED_IPS`       | IPs to ignore within the sequential range.                    |
+| `RANGE_PREFIX`       | Range prefix (e.g., `192.168` or `203.0.113`).            |
+| `RANGE_SUFFIX`       | Suffix of the assembled IP (e.g., `.254`, or empty).                    |
+| `RANGE_FIRST` / `RANGE_LAST` | Numeric range scanned within the interval.                     |
+| `RANGE_NAME_OFFSET`  | Offset for naming the store (`Store_<i - offset>`).           |
+| `SPECIAL_IP[n]` / `SPECIAL_NAME[n]` | Map from IP to specific unit name.          |
 
-O IP do intervalo é montado como `%RANGE_PREFIX%.<i>%RANGE_SUFFIX%`, e o nome
-da unidade como `Loja_<i - RANGE_NAME_OFFSET>` (ou o nome do mapa `SPECIAL_*`).
+The IP address in the range is formatted as `%RANGE_PREFIX%.<i>%RANGE_SUFFIX%`, and the unit name
+as `Store_<i - RANGE_NAME_OFFSET>` (or the name from the `SPECIAL_*` mapping).
 
-## Áudios
+## Audio Files
 
-Coloque os arquivos `.mp3` na pasta definida em `ALERT_DIR` (padrão `C:\Alerta`):
+Place the `.mp3` files in the folder specified in `ALERT_DIR` (default `C:\Alerta`):
 
-- `Alerta.mp3` — alerta genérico tocado antes do áudio da unidade.
-- Um `.mp3` por unidade, com o **mesmo nome** usado na configuração
+- `Alerta.mp3` — generic alert played before the unit’s audio.
+- One `.mp3` file per unit, with the **same name** used in the configuration
   (`Loja_09.mp3`, `Deposito.mp3`, ...).
 
-Os áudios podem ser gerados por TTS (veja `README.txt` para uma sugestão de
-voz em português).
+Audio files can be generated using TTS (see `README.txt` for a suggestion for a
+Portuguese voice).
 
-## Uso
+## Usage
 
-1. Ajuste `config.local.bat`.
-2. Garanta que os `.mp3` estejam em `ALERT_DIR`.
-3. Execute:
+1. Configure `config.local.bat`.
+2. Ensure that the `.mp3` files are in `ALERT_DIR`.
+3. Run:
 
    ```bat
    Alerta.bat
    ```
 
-O script roda em laço contínuo. Feche a janela do console para encerrar.
+The script runs in a continuous loop. Close the console window to stop it.
 
-## Requisitos
+## Requirements
 
-- Windows (usa `ping`, `find`, `timeout` e o Windows Media Player `wmplayer`).
+- Windows (uses `ping`, `find`, `timeout`, and the Windows Media Player `wmplayer`).
 
-## Licença
+## License
 
-Este repositório **não é open source**. Ele é disponibilizado publicamente
-apenas para fins de portfólio/demonstração técnica.
+This repository **is not open source**. It is made publicly available
+solely for portfolio/technical demonstration purposes.
 
-- ✅ Permitido: visualizar o código pela interface do GitHub.
-- ❌ Proibido: copiar, baixar, clonar para reuso, usar, modificar, executar
-  ou redistribuir este código, no todo ou em parte, sem autorização prévia
-  e por escrito do autor.
+- ✅ Allowed: view the code via the GitHub interface.
+- ❌ Prohibited: copying, downloading, cloning for reuse, using, modifying, executing,
+  or redistributing this code, in whole or in part, without prior
+  written permission from the author.
 
-Todos os direitos são reservados. Veja os termos completos em
+All rights reserved. See the full terms at
 [`LICENSE`](./LICENSE).
