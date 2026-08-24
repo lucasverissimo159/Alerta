@@ -1,5 +1,7 @@
 # Alert — IP Monitor with Audible Alert
 
+*(Para a versão em português, [clique aqui](#alerta--monitor-de-ip-com-alerta-sonoro))*
+
 Batch script (Windows) for continuous monitoring of the availability
 of network hosts via `ping`. When a host goes offline, the script emits an
 **audible alert** (a generic sound followed by the unit-specific sound)
@@ -108,4 +110,118 @@ solely for portfolio/technical demonstration purposes.
   written permission from the author.
 
 All rights reserved. See the full terms at
+[`LICENSE`](./LICENSE).
+
+---
+
+# Alerta — Monitor de IP com Alerta Sonoro
+
+Script em lote (Windows) para monitoramento contínuo da disponibilidade
+de hosts na rede via `ping`. Quando um host fica offline, o script emite um
+**alerta sonoro** (um som genérico seguido pelo som específico da unidade)
+e começa a alertar novamente em **intervalos progressivos** enquanto o host permanecer
+inacessível.
+
+> Ferramenta simples projetada para um escritório central ou recepção para monitorar, de forma
+> sonora, a perda de conexões de várias unidades (lojas, depósito, etc.).
+
+> ⚠️ **Repositório disponível apenas para fins de portfólio.** O código pode
+> ser visualizado, mas **não pode** ser copiado, baixado, usado ou
+> reutilizado em outros projetos. Veja a seção [Licença](#licença) e o
+> arquivo [`LICENSE`](./LICENSE).
+
+## Como funciona
+
+Em cada ciclo, o script:
+
+1. Executa `ping` em uma lista de **IPs fixos** e um **intervalo sequencial** de IPs.
+2. Para cada host **offline**, reproduz `Alerta.mp3` e em seguida o arquivo de áudio daquela unidade
+   (ex., `Loja_09.mp3`, `Deposito.mp3`), identificando qual unidade caiu.
+3. Registra a falha em um arquivo de status (`ping_retry.txt`) e depois
+   aguarda um certo intervalo antes de alertar novamente, que **aumenta a cada falha**:
+
+   | Falhas consecutivas | Próximo alerta em |
+   |---------------------|-------------------|
+   | 1ª                  | 5 minutos         |
+   | 2ª                  | 15 minutos        |
+   | 3ª                  | 30 minutos        |
+   | 4ª ou mais          | 1 hora            |
+
+4. Quando o host volta a responder, ele é removido da lista de status e retorna ao
+   monitoramento normal.
+
+## Configuração
+
+Os valores de rede **não** estão incluídos no script—eles são armazenados em um
+arquivo de configuração externo, para que o repositório não exponha a topologia real.
+
+1. Copie o modelo de exemplo:
+
+   ```bat
+   copy config.example.bat config.local.bat
+   ```
+
+2. Edite `config.local.bat` com os **endereços IP reais** da sua rede.
+   O arquivo `config.local.bat` está listado no `.gitignore` e **não será** adicionado ao
+   repositório.
+
+Se `config.local.bat` não existir, o script usa `config.example.bat`, que
+contém apenas **endereços fictícios** dos intervalos reservados para documentação
+pela [RFC 5737](https://datatracker.ietf.org/doc/html/rfc5737)
+(`192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24`).
+
+### Parâmetros de Configuração
+
+| Variável             | Descrição                                                          |
+|----------------------|--------------------------------------------------------------------|
+| `ALERT_DIR`          | Pasta contendo os arquivos `.mp3` e o arquivo de status (padrão `C:\Alerta`).  |
+| `FIXED_IPS`          | Lista de IPs fixos monitorados (separados por espaços).            |
+| `EXCLUDED_IPS`       | IPs a ignorar dentro do intervalo sequencial.                      |
+| `RANGE_PREFIX`       | Prefixo do intervalo (ex., `192.168` ou `203.0.113`).              |
+| `RANGE_SUFFIX`       | Sufixo do IP montado (ex., `.254`, ou vazio).                      |
+| `RANGE_FIRST` / `RANGE_LAST` | Faixa numérica verificada no intervalo.                    |
+| `RANGE_NAME_OFFSET`  | Deslocamento para nomear a loja (`Loja_<i - offset>`).             |
+| `SPECIAL_IP[n]` / `SPECIAL_NAME[n]` | Mapeamento de IP para nome de unidade específica.          |
+
+O endereço IP no intervalo é formatado como `%RANGE_PREFIX%.<i>%RANGE_SUFFIX%`, e o nome da unidade
+como `Store_<i - RANGE_NAME_OFFSET>` (ou o nome do mapeamento `SPECIAL_*`).
+
+## Arquivos de Áudio
+
+Coloque os arquivos `.mp3` na pasta especificada em `ALERT_DIR` (padrão `C:\Alerta`):
+
+- `Alerta.mp3` — alerta genérico reproduzido antes do áudio da unidade.
+- Um arquivo `.mp3` por unidade, com o **mesmo nome** usado na configuração
+  (`Loja_09.mp3`, `Deposito.mp3`, ...).
+
+Os arquivos de áudio podem ser gerados usando TTS (veja `README.txt` para uma sugestão de
+voz em português).
+
+## Uso
+
+1. Configure `config.local.bat`.
+2. Certifique-se de que os arquivos `.mp3` estão em `ALERT_DIR`.
+3. Execute:
+
+   ```bat
+   Alerta.bat
+   ```
+
+O script é executado em um loop contínuo. Feche a janela do console para pará-lo.
+
+## Requisitos
+
+- Windows (usa `ping`, `find`, `timeout` e o Windows Media Player `wmplayer`).
+
+## Licença
+
+Este repositório **não é open source**. Ele é disponibilizado publicamente
+exclusivamente para fins de portfólio/demonstração técnica.
+
+- ✅ Permitido: visualizar o código através da interface do GitHub.
+- ❌ Proibido: copiar, baixar, clonar para reutilização, usar, modificar, executar,
+  ou redistribuir este código, no todo ou em parte, sem permissão
+  prévia por escrito do autor.
+
+Todos os direitos reservados. Veja os termos completos em
 [`LICENSE`](./LICENSE).
