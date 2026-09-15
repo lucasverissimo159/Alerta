@@ -55,3 +55,66 @@ this repository should not be labeled as “open source.” In the absence of
 an explicit license, copyright law already automatically reserves
 all rights to the author—this file merely makes that
 condition explicit and details what is (and is not) permitted.
+
+
+===============================================================================
+PORTUGUÊS / PORTUGUESE
+===============================================================================
+
+Copyright (c) 2026 Lucas Veríssimo. Todos os direitos reservados.
+
+LICENÇA APENAS PARA VISUALIZAÇÃO
+
+Este repositório é tornado público exclusivamente para fins de
+demonstração e avaliação de portfólio. Este NÃO é um software livre nem
+open source, mesmo que o código esteja publicamente visível.
+
+1. PERMISSÕES
+
+   Apenas o seguinte é permitido:
+   a) Visualizar o código-fonte deste repositório através da
+      interface do GitHub (ou plataforma equivalente) para fins de
+      avaliação de portfólio, recrutamento ou análise técnica.
+
+2. PROIBIÇÕES
+
+   Sem autorização prévia por escrito do autor, é expressamente proibido:
+   a) Copiar, reproduzir, baixar (clonar/fazer download/manter fork), ou
+      armazenar este código, no todo ou em parte;
+   b) Usar, executar, instalar ou implantar este código, no todo ou em
+      parte, em qualquer ambiente ou para qualquer finalidade;
+   c) Modificar, adaptar ou criar obras derivadas com base neste código;
+   d) Redistribuir, sublicenciar, publicar ou disponibilizar este código,
+      no todo ou em parte, em qualquer outro repositório, produto ou meio;
+   e) Usar este código, no todo ou em parte, em projetos pessoais,
+      acadêmicos ou comerciais, sejam seus próprios ou de terceiros;
+   f) Usar este código para treinar, ajustar (fine-tune) ou avaliar
+      modelos de aprendizado de máquina ou inteligência artificial.
+
+3. NENHUMA LICENÇA CONCEDIDA
+
+   Nada neste documento deve ser interpretado como concessão,
+   por implicação, preclusão (estoppel) ou qualquer outro meio, de licença
+   ou direito a qualquer patente, marca registrada, direitos autorais ou outro
+   direito de propriedade intelectual do autor, exceto o direito de
+   visualização descrito na Seção 1.
+
+4. ISENÇÃO DE GARANTIAS
+
+   ESTE CÓDIGO É FORNECIDO “COMO ESTÁ” (“AS IS”),
+   SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU IMPLÍCITA. O AUTOR NÃO É
+   RESPONSÁVEL POR QUAISQUER DANOS DECORRENTES DO USO NÃO AUTORIZADO DESTE
+   CÓDIGO.
+
+5. CONTATO
+
+   Para solicitar permissão para usar este código além do escopo desta licença, por favor
+   entre em contato diretamente com o autor.
+
+---
+
+Nota: Como esta não é uma licença reconhecida pela Open Source Initiative (OSI),
+este repositório não deve ser rotulado como “open source.” Na ausência de
+uma licença explícita, a lei de direitos autorais já reserva automaticamente
+todos os direitos ao autor—este arquivo apenas torna essa
+condição explicita e detalha o que é (e não é) permitido.
